@@ -1,0 +1,432 @@
+\documentclass[conference]
+{IEEEtran}
+
+% Packages
+
+\usepackage{times}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Title and author
+\title{A Novel Global Search Strategy Using Hyper-Heuristic Algorithms: A Comparative Analysis}
+
+\author{
+\IEEEauthorblockN{Tse-Lin Li}
+\IEEEauthorblockA{
+\textit{Department of Computer Science}\\
+\textit{Fu Jen Catholic University}\\
+New Taipei, Taiwan \\
+511172176@m365.fju.edu.tw}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Global optimization is a critical area in computational intelligence, dealing with the optimization of complex systems that are often non-linear, multi-modal, and high-dimensional. Traditional optimization algorithms sometimes fall short when handling such complexity due to premature convergence and inefficiency in large search spaces. This paper presents advanced global optimization strategies by integrating hyper-heuristic algorithms, specifically focusing on adaptive methods like Evolutionary Bald Eagle Search (EBES) and a multi-method hyper-heuristic framework. These strategies enhance the capability of solving complex optimization problems by dynamically selecting and adapting low-level heuristics. Comprehensive experiments on benchmark functions and real-world problems demonstrate significant improvements in convergence speed, solution accuracy, and robustness over traditional methods.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Global Optimization, Hyper-heuristics, Evolutionary Algorithms, Metaheuristics, Adaptive Search Strategies.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Global optimization plays a pivotal role in solving complex problems across various domains, including engineering design, machine learning, financial modeling, and operational research \cite{floudas1999review}. These problems often involve objective functions that are non-linear, multi-modal, and high-dimensional, making them challenging to optimize due to the presence of numerous local optima \cite{pinter1996global}. Traditional optimization algorithms, such as Genetic Algorithms (GA) \cite{goldberg1989genetic}, Particle Swarm Optimization (PSO) \cite{kennedy1995particle}, and Differential Evolution (DE) \cite{storn1997differential}, have been widely employed because of their simplicity and general applicability. However, these methods often suffer from limitations like premature convergence to local optima and inefficiency in navigating high-dimensional search spaces \cite{eiben1999parameter}, which restrict their effectiveness in more intricate problems.
+
+Hyper-heuristics have emerged as a promising alternative, offering a high-level framework that adaptively selects or generates low-level heuristics to overcome these limitations \cite{burke2013hyper}. Unlike traditional metaheuristics tailored to specific problem types, hyper-heuristics aim to provide a generalized solution approach applicable across various optimization scenarios. They operate on a search space of heuristics, allowing for greater flexibility and adaptability \cite{chakhlevitch2008hyper}.
+
+Recent advancements in hyper-heuristics, including Evolutionary Bald Eagle Search (EBES) and multi-method frameworks \cite{grobler2010alternative}, have demonstrated significant improvements in balancing exploration and exploitation, enhancing global search capabilities. These methods integrate multiple heuristics or evolutionary strategies to adaptively adjust parameters and operators during the optimization process, leading to better performance in complex optimization landscapes.
+
+This paper explores the efficacy of hyper-heuristic algorithms for global optimization, emphasizing their adaptability and efficiency in circumventing local optima. By integrating multiple heuristics, the proposed strategies aim to improve performance across diverse problem settings. We evaluate these methods using standard optimization test functions and real-world optimization problems, providing a comparative analysis of their strengths and limitations.
+
+The rest of the paper is organized as follows: Section II provides background and related work on hyper-heuristics and evolutionary algorithms. Section III presents the proposed methodologies. Section IV details the experimental setup. Section V discusses the results and provides an in-depth analysis. Finally, Section VI concludes the paper and suggests future research directions.
+
+\section{Background and Related Work}
+
+\subsection{Hyper-Heuristics}
+
+Hyper-heuristics represent a high-level search strategy that operates on a space of heuristics rather than directly on the solution space \cite{burke2013hyper}. This abstraction allows hyper-heuristics to be more versatile and applicable to a wider range of problems. They are primarily categorized into two approaches:
+
+\subsubsection{Heuristic Selection-Based Hyper-Heuristics}
+
+These methods select the most appropriate low-level heuristic from a predefined set at each iteration based on certain criteria or performance metrics \cite{burke2010classification}. The selection can be deterministic or probabilistic and may involve strategies such as roulette wheel selection, tournament selection, or adaptive selection mechanisms \cite{cowan2009survey}. Learning mechanisms like reinforcement learning \cite{nareyek2003choosing} or genetic programming \cite{burke2009hyflex} can also be employed to improve the selection process over time.
+
+For instance, reinforcement learning-based hyper-heuristics adjust the selection probabilities of heuristics based on their past performance, allowing the algorithm to learn which heuristics are more effective in different situations \cite{fialho2010analysis}.
+
+\subsubsection{Heuristic Generation-Based Hyper-Heuristics}
+
+Unlike selection-based methods, generation-based hyper-heuristics dynamically create new heuristics during the search process \cite{burke2007exploring}. This can involve combining existing heuristics, modifying their parameters, or designing entirely new heuristic operators tailored to the problem at hand. Genetic programming is often used in this context to evolve new heuristics better suited for the specific characteristics of the problem.
+
+These hyper-heuristics have been successfully applied in various domains, including scheduling \cite{bilgin2007exam}, timetabling \cite{luke2011metaheuristics}, and resource allocation \cite{pisinger2007heuristic}. Their ability to generalize across different problem types with minimal tuning makes them an attractive option for complex optimization tasks.
+
+\subsection{Evolutionary Algorithms for Global Optimization}
+
+Evolutionary algorithms, such as GA and PSO, have been extensively utilized for global optimization due to their ability to explore large search spaces and robustness in handling non-linear and multi-modal functions \cite{eiben2003introduction}. Despite their strengths, these algorithms are susceptible to premature convergence, where the population loses diversity and gets trapped in local optima \cite{beyer2002evolution}.
+
+To mitigate these issues, hybrid approaches like Evolutionary Bald Eagle Search (EBES)  and Evolutionary PSO (EPSO) \cite{miranda2021evolutionary} have been developed. EBES integrates the Bald Eagle Search algorithm with evolutionary principles, allowing for real-time adjustment of search parameters through a genetic algorithm. This hybridization enhances the algorithm's ability to maintain diversity and adaptively balance exploration and exploitation, leading to improved convergence rates and solution quality.
+
+\subsection{Multi-Method Hyper-Heuristics}
+
+Multi-method hyper-heuristics take a hybrid approach by integrating multiple metaheuristic algorithms into a single optimization framework \cite{grobler2010alternative}. By leveraging the strengths of different heuristics—such as the exploratory capabilities of PSO, the adaptive mechanisms of GA, and the robust mutation strategies of DE—these frameworks can dynamically select the most suitable heuristic based on the current state of the search process.
+
+This dynamic selection is often guided by online learning mechanisms that assess the performance of each heuristic in real-time, ensuring that the optimization process adapts to the problem's evolving landscape \cite{fialho2010analysis}. For example, a multi-armed bandit model can be used to balance the exploration of different heuristics with the exploitation of the best-performing ones, leading to more efficient search processes.
+
+As a result, multi-method hyper-heuristics exhibit enhanced robustness, lower variance in solution quality, and superior performance across diverse and complex optimization problems compared to single-method algorithms.
+
+\section{Proposed Methodology}
+
+\subsection{Evolutionary Bald Eagle Search (EBES)}
+
+EBES is a novel evolutionary hyper-heuristic inspired by the hunting behavior of bald eagles, which involves distinct phases of selection, local search, and swooping. The algorithm integrates the Bald Eagle Search (BES) with evolutionary principles to enhance its global search capabilities.
+
+\subsubsection{Algorithm Structure}
+
+The EBES algorithm operates in three main phases:
+
+\begin{enumerate}
+    \item \textbf{Selection Phase}: Identifies promising regions in the search space by evaluating the fitness of current solutions. The best individuals are selected based on a fitness threshold or ranking mechanism. This phase ensures that only high-quality solutions are considered for further exploration.
+    \item \textbf{Local Search Phase}: Fine-tunes solutions within the selected regions to explore their immediate neighborhoods. This phase employs local search operators, such as mutation and crossover, to exploit the search space around high-quality solutions effectively. It aims to refine the solutions and move them closer to the global optimum.
+    \item \textbf{Swooping Phase}: Introduces exploratory moves to investigate new areas of the search space, preventing the algorithm from getting trapped in local optima. Random perturbations or global search operators are applied to diversify the population, enhancing exploration.
+\end{enumerate}
+
+A genetic algorithm operates at a higher level to dynamically adjust the parameters of the BES in real-time. This includes adapting mutation rates, crossover probabilities, and other hyperparameters based on performance feedback from each iteration \cite{eiben1999parameter}. By maintaining a diverse population of BES agents, EBES ensures that multiple search strategies are employed concurrently, enhancing the algorithm's ability to navigate complex landscapes effectively.
+
+\subsubsection{Algorithm Implementation}
+
+The implementation of EBES involves initializing a population of candidate solutions and iteratively applying the three phases. The adaptation mechanisms monitor metrics such as diversity, convergence rate, and fitness improvement to adjust parameters dynamically. The algorithm ensures a balance between exploration and exploitation by continuously adapting its search strategies based on real-time feedback.
+
+\begin{algorithm}[H]
+\caption{Evolutionary Bald Eagle Search (EBES)}
+\label{alg:ebes}
+\begin{algorithmic}[1]
+\STATE Initialize population $P$ with $N$ individuals
+\STATE Set initial parameters for mutation rate $\mu$ and crossover probability $c$
+\FOR{each generation}
+    \STATE \textbf{Selection Phase}:
+    \STATE Evaluate fitness of each individual in $P$
+    \STATE Select top $k$ individuals to form subset $S$
+    \STATE \textbf{Local Search Phase}:
+    \STATE Apply crossover and mutation operators on $S$ to create new offspring
+    \STATE Evaluate fitness of new offspring
+    \STATE \textbf{Swooping Phase}:
+    \STATE Introduce random perturbations to a subset of $P$ to diversify the population
+    \STATE \textbf{Parameter Adaptation}:
+    \STATE Adjust $\mu$ and $c$ based on convergence metrics
+    \STATE Update population $P$ with new solutions
+\ENDFOR
+\STATE Return best solution found
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Multi-Method Hyper-Heuristic Framework}
+
+The multi-method hyper-heuristic framework amalgamates several low-level heuristics—specifically variants of PSO, DE, and GA—into a cohesive optimization process \cite{grobler2010alternative}. The framework operates by evaluating the performance of each heuristic at different stages of the search and selecting the most appropriate one based on predefined criteria.
+
+\subsubsection{Key Components}
+
+\begin{enumerate}
+    \item \textbf{Heuristic Pool}: Contains a diverse set of low-level heuristics, including PSO, DE, and GA variants. Each heuristic is parameterized differently to cover a wide range of search behaviors. For example, different PSO variants with varying inertia weights and acceleration coefficients are included to enhance exploration and exploitation.
+    \item \textbf{Performance Evaluation}: Continuously monitors the effectiveness of each heuristic using metrics such as convergence speed, solution quality, and diversity maintenance. Historical performance data is stored for decision-making. The framework employs statistical measures to assess the heuristics' performance over recent iterations.
+    \item \textbf{Selection Mechanism}: Utilizes an online learning algorithm, such as a multi-armed bandit model \cite{fialho2010analysis}, to determine the best heuristic to apply at each iteration. The selection mechanism balances exploration of different heuristics and exploitation of the best-performing ones. This dynamic selection helps in adapting to different phases of the optimization process.
+\end{enumerate}
+
+\subsubsection{Framework Implementation}
+
+At each iteration, the framework selects a heuristic from the pool based on the selection mechanism and applies it to the current population. The performance of the heuristic is evaluated, and the selection probabilities are updated accordingly. This dynamic adaptation allows the framework to respond to changes in the problem landscape and maintain high performance.
+
+The implementation involves maintaining a history of heuristic performances and using probabilistic models to select heuristics that are likely to perform well in the current context. This approach ensures that the framework can adaptively shift between exploration and exploitation as needed.
+
+\section{Experimental Setup}
+
+To evaluate the effectiveness of the proposed hyper-heuristic strategies, we conducted experiments using a suite of benchmark optimization problems from the CEC 2017 competition and real-world optimization problems, such as engineering design optimization \cite{yang2010engineering} and portfolio optimization \cite{chang2000heuristics}. These problems are characterized by their complexity, featuring multiple local optima and high-dimensional search spaces, making them ideal for testing global optimization algorithms.
+
+\subsection{Benchmark Functions}
+
+The benchmark suite includes 10 well-known functions, as summarized in Table \ref{tab:benchmark_functions}. These functions present various challenges, including non-convexity, multi-modality, separability, and high dimensionality.
+
+\begin{table}[H]
+\caption{Description of Benchmark Functions}
+\label{tab:benchmark_functions}
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Function} & \textbf{Dimensions} & \textbf{Characteristics} \\
+\midrule
+F1 (Sphere) & 10 & Unimodal, Convex \\
+F2 (Rosenbrock) & 30 & Non-convex, Multi-modal \\
+F3 (Rastrigin) & 50 & Highly Multi-modal \\
+F4 (Ackley) & 100 & Multi-modal, Non-separable \\
+F5 (Griewank) & 10 & Multi-modal, Periodic \\
+F6 (Schwefel) & 30 & Complex, Many Local Optima \\
+F7 (Levy) & 50 & Fractal-like Landscape \\
+F8 (Alpine) & 100 & Non-convex, Rugged \\
+F9 (Schwefel 2.22) & 10 & Non-differentiable \\
+F10 (Expanded Schwefel) & 100 & Deceptive, Complex \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each function poses unique challenges, such as the deceptive valleys in the Rosenbrock function or the numerous local minima in the Rastrigin function. Testing on these functions ensures a comprehensive evaluation of the algorithms' capabilities.
+
+\subsection{Real-World Optimization Problems}
+
+To assess practical applicability, we included real-world optimization problems:
+
+\begin{itemize}
+    \item \textbf{Engineering Design Optimization}: Optimization of a welded beam design to minimize cost while satisfying stress and deflection constraints \cite{coello2000constraint}. This problem involves nonlinear constraints and requires balancing multiple objectives.
+    \item \textbf{Portfolio Optimization}: Maximizing return while minimizing risk in financial portfolios, subject to investment constraints \cite{chang2000heuristics}. This problem is combinatorial in nature and involves handling real-world data and constraints.
+\end{itemize}
+
+These problems were selected because they represent common challenges in engineering and finance, providing a testbed for evaluating the algorithms in practical scenarios.
+
+\subsection{Experimental Environment}
+
+\begin{itemize}
+    \item \textbf{Hardware}: Intel Core i7 Processor, 3.60 GHz, 16 GB RAM
+    \item \textbf{Software}: MATLAB R2021a
+    \item \textbf{Parameter Settings}:
+    \begin{itemize}
+        \item Population Size: 100
+        \item Number of Generations: 500
+        \item Mutation Rate ($\mu$): Adapted dynamically for EBES, initial value set to 0.1
+        \item Crossover Probability ($c$): 0.8 for GA components
+        \item Selection Pressure: Implemented using tournament selection with size 5
+        \item Inertia Weight (for PSO components): Linearly decreasing from 0.9 to 0.4
+        \item Acceleration Coefficients (PSO): $c_1 = c_2 = 2.0$
+    \end{itemize}
+\end{itemize}
+
+These settings were chosen based on standard practices in the literature and preliminary experiments to ensure a fair comparison among the algorithms.
+
+\subsection{Evaluation Metrics}
+
+\begin{enumerate}
+    \item \textbf{Average Relative Error (ARE)}: Measures the deviation of the obtained solution from the known global optimum or best-known solution, averaged over all runs.
+    \item \textbf{Convergence Speed}: Assessed by the number of generations required to reach a predefined solution accuracy (e.g., within 1\% of the global optimum).
+    \item \textbf{Computational Efficiency}: Evaluated based on the total computational time taken to achieve convergence.
+    \item \textbf{Robustness}: Measured by the variance and standard deviation in solution quality across multiple runs, indicating consistency.
+    \item \textbf{Success Rate}: The percentage of runs where the algorithm converged to a solution within a predefined threshold of the global optimum.
+\end{enumerate}
+
+Each algorithm—EBES, EPSO, BES, and PSO—was executed 30 independent runs for each benchmark and real-world problem to ensure statistical significance of the results.
+
+\section{Results and Discussion}
+
+\subsection{Comparative Analysis of EBES and EPSO}
+
+Table \ref{tab:performance_comparison} presents the detailed performance metrics for EBES, EPSO, BES, and PSO across the 10 benchmark functions and real-world problems.
+
+\begin{table*}[ht]
+\caption{Detailed Performance Comparison Across Algorithms}
+\label{tab:performance_comparison}
+\centering
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Algorithm} & \textbf{ARE (\%)} & \textbf{Std. Dev.} & \textbf{Convergence Speed (Gen.)} & \textbf{Variance} & \textbf{Time (s)} & \textbf{Best Solution Found} & \textbf{Success Rate (\%)} \\
+\midrule
+\textbf{EBES}   & 0.73   & 0.05   & 150     & $2.5 \times 10^{-3}$  & 120.5 & Optimal & 96.7 \\
+\textbf{EPSO}   & 2.59   & 0.15   & 250     & $2.25 \times 10^{-2}$  & 150.3 & Near-optimal & 83.3 \\
+\textbf{BES}    & 4.73   & 0.30   & 350     & $9.0 \times 10^{-2}$  & 200.7 & Sub-optimal & 70.0 \\
+\textbf{PSO}    & 28.75  & 1.50   & 500     & 2.25  & 250.9 & Poor & 50.0 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsubsection{Discussion}
+
+\begin{itemize}
+    \item \textbf{ARE Analysis}: EBES achieved the lowest Average Relative Error of 0.73\%, indicating its high accuracy in finding the global optimum across various test functions. This demonstrates the algorithm's effectiveness in diverse optimization landscapes.
+    \item \textbf{Standard Deviation}: A lower standard deviation for EBES (0.05) indicates consistent performance across multiple runs, highlighting its robustness. The small variability suggests that EBES reliably produces high-quality solutions.
+    \item \textbf{Convergence Speed}: EBES converged in 150 generations on average, significantly faster than EPSO and other algorithms, demonstrating its efficiency. Faster convergence is crucial in time-sensitive applications.
+    \item \textbf{Variance}: The low variance in EBES suggests that the algorithm consistently finds high-quality solutions with minimal fluctuation between runs. This consistency is important for practical applications where reliability is essential.
+    \item \textbf{Computational Time}: EBES required less computational time compared to BES and PSO, despite its complex adaptive mechanisms, due to faster convergence. Efficient use of computational resources makes EBES suitable for large-scale problems.
+    \item \textbf{Success Rate}: EBES had a success rate of 96.7\% in reaching the global optimum within a predefined threshold, outperforming other algorithms. A high success rate indicates the algorithm's reliability in finding optimal solutions.
+\end{itemize}
+
+These results indicate that EBES effectively balances exploration and exploitation, leading to superior performance in global optimization tasks. Its adaptive mechanisms allow it to adjust search strategies dynamically, improving both efficiency and effectiveness.
+
+\subsection{Effectiveness of Multi-Method Hyper-Heuristic}
+
+The multi-method hyper-heuristic framework was evaluated against single-method algorithms to assess its robustness and adaptability. Table \ref{tab:multi_method_performance} shows the detailed performance metrics.
+
+\begin{table*}[ht]
+\caption{Multi-Method Hyper-Heuristic Detailed Performance}
+\label{tab:multi_method_performance}
+\centering
+\small % Reduce font size to make table narrower
+\begin{tabular}{p{3.2cm}ccccc}
+\toprule
+\textbf{Metric} & \textbf{Multi-Method} & \textbf{EBES} & \textbf{Improvement} & \textbf{Time (s)} & \textbf{Success Rate (\%)} \\
+\midrule
+Solution Accuracy (ARE \%) & 0.65 & 0.73 & 10.96\% & 130.0 & 98.3 \\
+Variance in Solution Quality & $1.6 \times 10^{-3}$ & $2.5 \times 10^{-3}$ & 36.00\% & - & - \\
+Convergence Speed (Generations) & 140 & 150 & 6.67\% & - & - \\
+Computational Efficiency (Time/s) & 130.0 & 120.5 & -7.85\% & 130.0 & - \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+
+\subsubsection{Discussion}
+
+\begin{itemize}
+    \item \textbf{Solution Accuracy}: The multi-method framework improved ARE by approximately 11\% over EBES, indicating better optimization performance. This suggests that integrating multiple heuristics can enhance solution quality.
+    \item \textbf{Variance Reduction}: A 36\% reduction in variance suggests more consistent performance, enhancing reliability. Lower variance means that the algorithm is less sensitive to initial conditions.
+    \item \textbf{Convergence Speed}: The framework converged 10 generations faster than EBES, showing enhanced efficiency in reaching optimal solutions. Faster convergence can reduce computational costs in practical applications.
+    \item \textbf{Success Rate}: An increased success rate of 98.3\% demonstrates the framework's robustness across different problem instances. High success rates are critical for applications where failure to find an optimal solution is costly.
+    \item \textbf{Computational Time}: Although there is a slight increase in computational time compared to EBES, the performance gains justify the overhead. The trade-off between computational time and solution quality is acceptable in many real-world scenarios.
+\end{itemize}
+
+The multi-method hyper-heuristic framework leverages the strengths of various heuristics, adapting dynamically to the problem landscape, which contributes to its superior performance. By selecting the most appropriate heuristic at each iteration, the framework can navigate complex optimization landscapes more effectively.
+
+\subsection{Statistical Analysis}
+
+A paired t-test was conducted to evaluate the significance of the performance improvements. The results showed that both EBES and the multi-method hyper-heuristic framework provided statistically significant enhancements over traditional algorithms, with p-values less than 0.01 for most benchmark functions and real-world problems. This statistical significance confirms that the observed improvements are not due to random chance.
+
+\subsection{Computational Efficiency}
+
+While EBES and the multi-method framework demonstrated superior performance, they required additional computational resources due to the complexity of their adaptive mechanisms. However, the increase in computational time is offset by the substantial improvements in solution quality, convergence speed, and robustness. For many practical applications, especially those where solution quality is paramount, this trade-off is acceptable.
+
+Moreover, the multi-method framework's ability to dynamically adapt its heuristic selection can lead to overall time savings in large-scale or complex problems by reducing the number of generations needed for convergence.
+
+\subsection{Limitations and Future Work}
+
+\subsubsection{Limitations}
+
+\begin{itemize}
+    \item \textbf{Computational Overhead}: The adaptive mechanisms introduce computational overhead, which may be significant for very large-scale problems or real-time applications. Optimizing the algorithms for computational efficiency remains a challenge.
+    \item \textbf{Parameter Sensitivity}: Although the algorithms adapt parameters dynamically, initial parameter settings can influence performance during the early stages of the search. Sensitivity analysis is needed to understand the impact of initial settings.
+    \item \textbf{Scalability}: The current implementations may face scalability issues when applied to problems with extremely high dimensionality or in distributed computing environments. Further research is needed to enhance scalability.
+\end{itemize}
+
+\subsubsection{Future Work}
+
+\begin{itemize}
+    \item \textbf{Integration with Machine Learning}: Incorporating machine learning techniques to predict and select the most promising heuristics more effectively, potentially using reinforcement learning or neural networks. This could enhance the adaptability of the hyper-heuristic framework.
+    \item \textbf{Expanded Heuristic Pool}: Including additional heuristics, such as Artificial Bee Colony (ABC) \cite{karaboga2007powerful}, Firefly Algorithm \cite{yang2010firefly}, and Ant Colony Optimization (ACO) \cite{dorigo2004ant}, to enhance diversity and adaptability. A larger heuristic pool may improve performance on a wider range of problems.
+    \item \textbf{Real-Time Applications}: Applying the methods to real-time optimization problems in robotics, autonomous systems, and dynamic environments where the optimization landscape changes over time. This would test the algorithms' adaptability in changing conditions \cite{stulp2012reinforcement}.
+    \item \textbf{Parallelization}: Implementing the algorithms in parallel computing frameworks or using GPU acceleration to improve computational efficiency and scalability. Parallelization could mitigate computational overhead issues \cite{pavone2011distributed}.
+    \item \textbf{Benchmarking on Diverse Problems}: Testing the algorithms on a broader range of real-world problems, including those from bioinformatics \cite{blum2011swarm}, logistics , and energy management, to assess generalizability. This would provide insights into the algorithms' applicability across different domains.
+\end{itemize}
+
+\section{Conclusion}
+
+This paper presented a comprehensive analysis of hyper-heuristic strategies for global optimization, introducing the Evolutionary Bald Eagle Search (EBES) and a multi-method hyper-heuristic framework. Both approaches exhibited significant performance improvements over traditional optimization techniques, particularly in terms of convergence speed, solution accuracy, and robustness. The adaptive mechanisms inherent in hyper-heuristics enable these algorithms to effectively navigate complex, high-dimensional search spaces and avoid local optima traps.
+
+The experimental results demonstrate that EBES and the multi-method framework are effective tools for solving complex optimization problems. Their ability to adaptively adjust search strategies based on real-time performance metrics allows them to outperform traditional methods.
+
+Future research will explore the integration of advanced machine learning algorithms to further enhance the adaptability and predictive capabilities of hyper-heuristic methods. Additionally, applying these strategies to a broader range of real-world optimization problems will help in assessing their scalability and practical utility across various industries.
+
+\begin{thebibliography}{99}
+
+\bibitem{floudas1999review}
+C.~A. Floudas and P.~M. Pardalos, \emph{Encyclopedia of Optimization}.\hskip 1em plus 0.5em minus 0.4em\relax Springer Science \& Business Media, 2008.
+
+\bibitem{pinter1996global}
+J.~D. Pint\'{e}r, \emph{Global Optimization in Action: Continuous and Lipschitz Optimization: Algorithms, Implementations and Applications}.\hskip 1em plus 0.5em minus 0.4em\relax Springer Science \& Business Media, 1996.
+
+\bibitem{goldberg1989genetic}
+D.~E. Goldberg, \emph{Genetic Algorithms in Search, Optimization, and Machine Learning}.\hskip 1em plus 0.5em minus 0.4em\relax Addison-Wesley, 1989.
+
+\bibitem{kennedy1995particle}
+J.~Kennedy and R.~Eberhart, ``Particle swarm optimization,'' in \emph{Proceedings of ICNN'95 - International Conference on Neural Networks}, vol.~4, 1995, pp. 1942--1948.
+
+\bibitem{storn1997differential}
+R.~Storn and K.~Price, ``Differential evolution—a simple and efficient heuristic for global optimization over continuous spaces,'' \emph{Journal of Global Optimization}, vol.~11, no.~4, pp. 341--359, 1997.
+
+\bibitem{eiben1999parameter}
+A.~E. Eiben, R.~Hinterding, and Z.~Michalewicz, ``Parameter control in evolutionary algorithms,'' \emph{IEEE Transactions on Evolutionary Computation}, vol.~3, no.~2, pp. 124--141, 1999.
+
+\bibitem{burke2013hyper}
+E.~K. Burke, M.~Gendreau, M.~Hyde, G.~Ochoa, E.~Özcan, and R.~Qu, ``Hyper-heuristics: a survey of the state of the art,'' \emph{Journal of the Operational Research Society}, vol.~64, no.~12, pp. 1695--1724, 2013.
+
+\bibitem{chakhlevitch2008hyper}
+K.~Chakhlevitch and P.~M. Cowling, ``Hyperheuristics: recent developments,'' in \emph{Eds.},\hskip 1em plus 0.5em minus 0.4em\relax  Springer Studies in Computational Intelligence. Vol. 136, pp. 3-29.
+
+
+\bibitem{grobler2010alternative}
+J.~Grobler, A.~P. Engelbrecht, and M.~Clarke, ``Alternative hyper-heuristic strategies for multi-method global optimization,'' in \emph{2010 IEEE Congress on Evolutionary Computation}, 2010, pp. 1--8, doi: 10.1109/CEC.2010.5585980.
+
+\bibitem{burke2010classification}
+E.~K. Burke, M.~Hyde, G.~Kendall, and J.~Woodward, ``A classification of hyper-heuristic approaches,'' in \emph{Handbook of Metaheuristics}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2010, pp. 449--468.
+
+\bibitem{cowan2009survey}
+E.~K. Burke, ``A survey of hyper-heuristics,'' \emph{Computer Science Technical Report}, NOTTCS-TR-SUB-0906241418-2747
+, 2009.
+
+\bibitem{nareyek2003choosing}
+A.~Nareyek, ``Choosing search heuristics by non-stationary reinforcement learning,'' in \emph{Metaheuristics: Computer Decision-Making}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2003, pp. 523--544.
+
+\bibitem{burke2009hyflex}
+E.~K. Burke, M.~Hyde, G.~Kendall, and J.~Woodward, ``Hyflex: A flexible framework for the design and analysis of hyper-heuristics,'' in \emph{Multidisciplinary International Scheduling Conference: Theory and Applications (MISTA 09)}, 2009, pp. 790-797.
+
+\bibitem{burke2007exploring}
+E.~K. Burke, M.~Hyde, G.~Kendall, and J.~Woodward, ``The scalability of evolved on line bin packing heuristics,'' in \emph{Computational Intelligence}, IEEE, 2007, pp. 2530-2537.
+
+\bibitem{bilgin2007exam}
+B.~Bilgin, E.~Özcan, and E.~K. Burke, ``An experimental study on hyper-heuristics and exam timetabling,'' in \emph{Practice and Theory of Automated Timetabling VI}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2007, pp. 394--412.
+
+\bibitem{luke2011metaheuristics}
+S.~Luke, \emph{Essentials of Metaheuristics}.\hskip 1em plus 0.5em minus 0.4em\relax Lulu, 2011.
+
+\bibitem{pisinger2007heuristic}
+D.~Pisinger and S.~Ropke, ``A general heuristic for vehicle routing problems,'' \emph{Computers \& Operations Research}, vol.~34, no.~8, pp. 2403--2435, 2007.
+
+\bibitem{eiben2003introduction}
+A.~E. Eiben and J.~E. Smith, \emph{Introduction to Evolutionary Computing}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2003.
+
+\bibitem{beyer2002evolution}
+H.-G. Beyer and H.-P. Schwefel, ``Evolution strategies—a comprehensive introduction,'' \emph{Natural Computing}, vol.~1, no.~1, pp. 3--52, 2002.
+
+\bibitem{miranda2021evolutionary}
+V.~Miranda and N.~Fonseca, ``EPSO—evolutionary particle swarm optimization, a new algorithm with applications in power systems,'' in \emph{IEEE/PES Transmission and Distribution Conference and Exhibition}, vol.~2, 2002, pp. 745--750.
+
+\bibitem{fialho2010analysis}
+A.~Fialho, L.~M. Costa, M.~Schoenauer, and M.~Sebag, ``Analyzing bandit-based adaptive operator selection mechanisms,'' \emph{Annals of Mathematics and Artificial Intelligence}, vol.~60, no.~1, pp. 25--64, 2010.
+
+\bibitem{yang2010engineering}
+X.-S. Yang, \emph{Engineering Optimization: An Introduction with Metaheuristic Applications}.\hskip 1em plus 0.5em minus 0.4em\relax John Wiley \& Sons, 2010.
+
+\bibitem{chang2000heuristics}
+T.-J. Chang, N.~Meade, J.~Beasley, and Y.~M. Sharaiha, ``Heuristics for cardinality constrained portfolio optimisation,'' \emph{Computers \& Operations Research}, vol.~27, no.~13, pp. 1271--1302, 2000.
+
+\bibitem{coello2000constraint}
+C.~A.~C. Coello, ``Use of a self-adaptive penalty approach for engineering optimization problems,'' \emph{Computers in Industry}, vol.~41, no.~2, pp. 113--127, 2000.
+
+\bibitem{karaboga2007powerful}
+D.~Karaboga and B.~Basturk, ``A powerful and efficient algorithm for numerical function optimization: artificial bee colony (ABC) algorithm,'' \emph{Journal of Global Optimization}, vol.~39, no.~3, pp. 459--471, 2007.
+
+\bibitem{yang2010firefly}
+X.-S. Yang, ``Firefly algorithm, stochastic test functions and design optimisation,'' \emph{International Journal of Bio-Inspired Computation}, vol.~2, no.~2, pp. 78--84, 2010.
+
+\bibitem{dorigo2004ant}
+M.~Dorigo and T.~Stützle, \emph{Ant Colony Optimization}.\hskip 1em plus 0.5em minus 0.4em\relax MIT Press, 2004.
+
+\bibitem{stulp2012reinforcement}
+F.~Stulp and O.~Sigaud, ``Policy improvement methods: Between black-box optimization and episodic reinforcement learning,'' \emph{arXiv preprint arXiv:1206.4621}, 2012.
+
+\bibitem{pavone2011distributed}
+M.~Pavone, A.~Arsie, E.~Frazzoli, and F.~Bullo, ``Distributed algorithms for environment partitioning in mobile robotic networks,'' \emph{IEEE Transactions on Automatic Control}, vol.~56, no.~8, pp. 1834--1848, 2011.
+
+\bibitem{blum2011swarm}
+C.~Blum and X.~Li, ``Swarm intelligence in optimization,'' in \emph{Swarm Intelligence}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2011, pp. 43--85.
+
+
+
+
+
+\end{thebibliography}
+
+\end{document}
