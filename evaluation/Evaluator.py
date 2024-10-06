@@ -10,6 +10,7 @@ from evaluation.functions.cec_objective_functions import F102022, F102022_10, F1
 #from evaluation.functions.engineering_problems import spring_func
 from evaluation.functions.engineering_problems import spring_func, welded_func, beam_func, speed_func, rolling_func
 from hyperheuristic.DEHyperHeuristic import DEHyperHeuristic
+from hyperheuristic.NewDEHyperHeuristic import NewDEHyperHeuristic
 from hyperheuristic.DEHyperHeuristic2 import DEHyperHeuristic2
 from hyperheuristic.ESSAHyperHeuristic import ESSAHyperHeuristic
 from hyperheuristic.EBESHyperHeuristic import EBESHyperHeuristic
@@ -38,10 +39,11 @@ from metaheuristic.sma.SMAHeuristic import SMAHeuristic
 from metaheuristic.aoa.AOAHeuristic import AOAHeuristic
 from metaheuristic.hho.HHOHeuristic import HHOHeuristic
 from metaheuristic.ssa.SSAHeuristic import SSAHeuristic
-from metaheuristic.triangle.TCO2Heuristic import TCO2Heuristic
-from metaheuristic.triangle.TCO3Heuristic import TCO3Heuristic
+#from metaheuristic.triangle.TCO2Heuristic import TCO2Heuristic
+#from metaheuristic.triangle.TCO3Heuristic import TCO3Heuristic
 from metaheuristic.triangle.TCOHeuristic import TCOHeuristic
 from metaheuristic.woa.WOAHeuristic import WOAHeuristic
+from hyperheuristic.EfficientHyperHeuristic import EfficientHyperHeuristic
 
 
 class Evaluator:
@@ -156,7 +158,7 @@ class Evaluator:
                 ]
 
 
-    heuristics = [ESSAHyperHeuristic(), HHOHeuristic(), HGSHeuristic(), SSAHeuristic(), BESHeuristic(), SMAHeuristic(),
+    """heuristics = [ESSAHyperHeuristic(), HHOHeuristic(), HGSHeuristic(), SSAHeuristic(), BESHeuristic(), SMAHeuristic(),
                   CGOHeuristic(),
                   WOAHeuristic(), SCAHeuristic(), AOHeuristic(), FFAHeuristic(), ACORHeuristic(), PSOHeuristic(),
                   CROHeuristic(), AOAHeuristic(),
@@ -169,12 +171,19 @@ class Evaluator:
 
     heuristics = [DEHyperHeuristic(), ESSAHyperHeuristic(), SSAHeuristic(), SHADEHeuristic(), LSHADEHeuristic(), DEHeuristic(),
                   EBESHyperHeuristic(), BESHeuristic(), WOAHeuristic(), CGOHeuristic(), HHOHeuristic(),
-                  HGSHeuristic(), SMAHeuristic()]
+                  HGSHeuristic(), SMAHeuristic()]"""
 
-    heuristics = [TCOHeuristic(), SHADEHeuristic(), CGOHeuristic(), MSAHeuristic(), ABCHeuristic()]
+    #heuristics = [TCOHeuristic(), SHADEHeuristic(), CGOHeuristic(), MSAHeuristic(), ABCHeuristic()]
+    #heuristics = [DEHyperHeuristic()]
+    #heuristics = [NewDEHyperHeuristic()]
+    #heuristics = [HybridHyperHeuristic()]
+    heuristics = [NewDEHyperHeuristic(), DEHyperHeuristic()]
+    #heuristics = [EfficientHyperHeuristic()]
+    #heuristics = [SHADEHeuristic()]
+    
 
 
-    def evaluate(self, from_file=False, verbose=True, nr_executions=10):
+    def evaluate(self, from_file=False, verbose=True, nr_executions=1):
         trials = []
         results = {heuristic.__class__.__name__: 0 for heuristic in self.heuristics}
         for problem in self.problems:
@@ -193,7 +202,7 @@ class Evaluator:
             json.dump(ranking, outfile)
         return ranking
 
-    def friedman_ranking_from_file(self, significance=0.0000001,  nr_executions=10):
+    def friedman_ranking_from_file(self, significance=0.0000001,  nr_executions=1):
         trials = []
         results = {heuristic.__class__.__name__: 0 for heuristic in self.heuristics}
         for problem in self.problems:
@@ -218,12 +227,12 @@ class Evaluator:
             json.dump(ranking, outfile)
         return ranking
 
-    def plot_convergence_from_file(self, nr_executions=10):
+    def plot_convergence_from_file(self, nr_executions=60):
         for problem in self.problems:
             trial = Trial(problem=problem, heuristics=self.heuristics, nr_executions=nr_executions)
             trial.plot_convergence()
 
-    def plot_box_from_file(self, verbose=True, nr_executions=10):
+    def plot_box_from_file(self, verbose=True, nr_executions=60):
         for problem in self.problems:
             trial = Trial(problem=problem, heuristics=self.heuristics, nr_executions=nr_executions)
             trial.plot_box(verbose=verbose)

@@ -26,9 +26,9 @@ class DEHyperHeuristic(HyperHeuristic):
                               on_generation=inspect,
                               gene_space=gene_space,
                               mutation_num_genes=self.mutation_num_genes,
-                              # save_solutions=True
+                              save_solutions=True
                               )
         ga_instance.run()
-        # plot_hyper_parameters()
-        # ga_instance.plot_genes(plot_type='scatter')
+        #plot_hyper_parameters()
+        #ga_instance.plot_genes(plot_type='scatter')
         return ga_instance.best_actual_solutions

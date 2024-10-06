@@ -138,7 +138,8 @@ class Trial:
                     for e in range(0, self.nr_executions):
                         s += results[str(e)][i]
                     avg_histogram.append(s / self.nr_executions)
-                color = 'red'
+                #color = 'red'
+                color = colors[idx % len(colors)]
             matplotlib.pyplot.plot(avg_histogram, linewidth=1, color=color,
                                label=heuristic.__class__.__name__.replace('HyperHeuristic', '').replace('Heuristic', ''))
 

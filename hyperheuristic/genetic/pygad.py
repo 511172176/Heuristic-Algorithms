@@ -7,7 +7,12 @@ import warnings
 
 class GA:
 
-    supported_int_types = [int, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.int64, numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
+    supported_int_types = [
+        int,
+        numpy.int8, numpy.int16, numpy.int32, numpy.int64,
+        numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64
+    ]
+
     supported_float_types = [float, numpy.float, numpy.float16, numpy.float32, numpy.float64]
     supported_int_float_types = supported_int_types + supported_float_types
 

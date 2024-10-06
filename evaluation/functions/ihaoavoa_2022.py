@@ -27,6 +27,7 @@ class TensionCompressionSpringProblem(Engineer):
         self.check_penalty_func(f_penalty)
 
     def get_objs(self, x):
+        x = np.array(x)
         f1 = (x[2] + 2) * x[1]*x[0]**2
         return np.array([f1, ])
 
@@ -70,6 +71,7 @@ class WeldedBeamProblem(Engineer):
         self.check_penalty_func(f_penalty)
 
     def get_objs(self, x):
+        x = np.array(x)
         f1 = 1.10471 * x[0]**2 * x[1] + 0.04811 * x[2] * x[3] * (14 + x[1])
         return np.array([f1, ])
 
@@ -117,6 +119,7 @@ class CantileverBeamProblem(Engineer):
         self.check_penalty_func(f_penalty)
 
     def get_objs(self, x):
+        x = np.array(x)
         f1 = 0.6224 * np.sum(x)
         return np.array([f1, ])
 
@@ -150,6 +153,7 @@ class SpeedReducerProblem(Engineer):
         self.check_penalty_func(f_penalty)
 
     def get_objs(self, x):
+        x = np.array(x)
         f1 = 0.7584*x[0]*x[1]**2*(3.3333*x[2]**2 + 14.9334*x[2]-43.0934) - 1.508*x[0]*(x[5]**2+x[6]**2) + 7.4777*(x[5]**3 + x[6]**3) + 0.7854*(x[3]*x[5]**2 + x[4]*x[6]**2)
         return np.array([f1, ])
 
@@ -199,6 +203,7 @@ class RollingElementBearingProblem(Engineer):
         return x
 
     def get_objs(self, x):
+        x = np.array(x)
         gama = x[1] / x[0]
         t1 = 37.91*(1+(1.04*((1-gama)/(1+gama))**1.72*(x[3]/x[4] * (2*x[4] - 1)/(2*x[3] - 1))**0.41)**(10./3))**(-0.3)
         fc = t1 * (gama**0.3 *(1 - gama)**1.39 / ((1+gama)**(1./3))) * (2*x[3]/(2*x[3] - 1))**0.41
