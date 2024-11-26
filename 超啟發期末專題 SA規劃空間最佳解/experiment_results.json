@@ -1,0 +1,296 @@
+[
+    {
+        "test_case": 1,
+        "room_size": "3x3m",
+        "sa_energy": 0,
+        "sa_time": 3.990492799988715,
+        "exact_energy": 0,
+        "exact_time": 0.004962900013197213,
+        "sa_layout": [
+            {
+                "name": "床",
+                "length": 1,
+                "width": 1.5,
+                "x": 0.21601961292240346,
+                "y": 0.7567388984318368,
+                "orientation": 90
+            },
+            {
+                "name": "書桌",
+                "length": 1,
+                "width": 0.5,
+                "x": 0.2790758570502878,
+                "y": 0.25623794042876874,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.5,
+                "width": 0.5,
+                "x": 1.4762312811225993,
+                "y": 0.07945669870445898,
+                "orientation": 0
+            }
+        ],
+        "exact_layout": [
+            {
+                "name": "床",
+                "length": 1.5,
+                "width": 1,
+                "x": 0.0,
+                "y": 0.0,
+                "orientation": 0
+            },
+            {
+                "name": "書桌",
+                "length": 1,
+                "width": 0.5,
+                "x": 0.0,
+                "y": 1.0,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.5,
+                "width": 0.5,
+                "x": 0.0,
+                "y": 1.5,
+                "orientation": 0
+            }
+        ]
+    },
+    {
+        "test_case": 2,
+        "room_size": "5x4m",
+        "sa_energy": 0,
+        "sa_time": 8.638636900024721,
+        "exact_energy": Infinity,
+        "exact_time": 3.0646785000280943,
+        "sa_layout": [
+            {
+                "name": "床",
+                "length": 2,
+                "width": 1.5,
+                "x": 3,
+                "y": 1.8539022275405412,
+                "orientation": 0
+            },
+            {
+                "name": "衣櫃",
+                "length": 0.6,
+                "width": 1.5,
+                "x": 2.3699343546753147,
+                "y": 0,
+                "orientation": 90
+            },
+            {
+                "name": "書桌",
+                "length": 0.6,
+                "width": 1.2,
+                "x": 0,
+                "y": 1.6582365771781673,
+                "orientation": 90
+            },
+            {
+                "name": "椅子",
+                "length": 0.5,
+                "width": 0.5,
+                "x": 4.378170803846693,
+                "y": 0,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.5,
+                "width": 0.5,
+                "x": 0.6709969322409076,
+                "y": 1.3586518807228039,
+                "orientation": 0
+            },
+            {
+                "name": "沙發",
+                "length": 2,
+                "width": 1,
+                "x": 0.22762622353416306,
+                "y": 0.31944179295091024,
+                "orientation": 0
+            },
+            {
+                "name": "茶几",
+                "length": 0.5,
+                "width": 1,
+                "x": 1.541102244953084,
+                "y": 2.77629034620285,
+                "orientation": 90
+            }
+        ],
+        "exact_layout": null
+    },
+    {
+        "test_case": 3,
+        "room_size": "2.5x2m",
+        "sa_energy": 0,
+        "sa_time": 3.8549053999886382,
+        "exact_energy": 0,
+        "exact_time": 0.0032039999787230045,
+        "sa_layout": [
+            {
+                "name": "床",
+                "length": 1,
+                "width": 1,
+                "x": 0.3544014514155355,
+                "y": 0.05546436145731248,
+                "orientation": 0
+            },
+            {
+                "name": "書桌",
+                "length": 0.5,
+                "width": 1,
+                "x": 1.997168428899275,
+                "y": 1,
+                "orientation": 90
+            },
+            {
+                "name": "椅子",
+                "length": 0.5,
+                "width": 0.5,
+                "x": 1.1964365316978016,
+                "y": 1.5,
+                "orientation": 90
+            }
+        ],
+        "exact_layout": [
+            {
+                "name": "床",
+                "length": 1,
+                "width": 1,
+                "x": 0.0,
+                "y": 0.0,
+                "orientation": 0
+            },
+            {
+                "name": "書桌",
+                "length": 1,
+                "width": 0.5,
+                "x": 0.0,
+                "y": 1.0,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.5,
+                "width": 0.5,
+                "x": 0.0,
+                "y": 1.5,
+                "orientation": 0
+            }
+        ]
+    },
+    {
+        "test_case": 4,
+        "room_size": "6x5m",
+        "sa_energy": 0.39097829024182396,
+        "sa_time": 16.75533230000292,
+        "exact_energy": null,
+        "exact_time": null,
+        "sa_layout": [
+            {
+                "name": "床",
+                "length": 2.5,
+                "width": 1.5,
+                "x": 3.0090028073189634,
+                "y": 1.3823333442553194,
+                "orientation": 0
+            },
+            {
+                "name": "衣櫃",
+                "length": 0.8,
+                "width": 2,
+                "x": 1.9003646643460963,
+                "y": 0,
+                "orientation": 90
+            },
+            {
+                "name": "衣櫃",
+                "length": 0.8,
+                "width": 2,
+                "x": 2.061023997043228,
+                "y": 2.4441200467000614,
+                "orientation": 90
+            },
+            {
+                "name": "書桌",
+                "length": 0.7,
+                "width": 1.5,
+                "x": 4.540948571033759,
+                "y": 0,
+                "orientation": 90
+            },
+            {
+                "name": "書桌",
+                "length": 1.5,
+                "width": 0.7,
+                "x": 3.380630293319842,
+                "y": 3.297425444070771,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.6,
+                "width": 0.6,
+                "x": 4.173748764416362,
+                "y": 4.375627432881389,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.6,
+                "width": 0.6,
+                "x": 4.132434878907074,
+                "y": 0,
+                "orientation": 90
+            },
+            {
+                "name": "椅子",
+                "length": 0.6,
+                "width": 0.6,
+                "x": 1.2832754529745425,
+                "y": 0.16643309347858615,
+                "orientation": 0
+            },
+            {
+                "name": "椅子",
+                "length": 0.6,
+                "width": 0.6,
+                "x": 2.738409353401323,
+                "y": 2.534703067020419,
+                "orientation": 90
+            },
+            {
+                "name": "沙發",
+                "length": 1.2,
+                "width": 3,
+                "x": 0.02610860718660435,
+                "y": 1.282444800836252,
+                "orientation": 90
+            },
+            {
+                "name": "茶几",
+                "length": 0.6,
+                "width": 1.2,
+                "x": 1.2202057814393867,
+                "y": 3.3270767084489057,
+                "orientation": 90
+            },
+            {
+                "name": "茶几",
+                "length": 0.6,
+                "width": 1.2,
+                "x": 1.2719354439045816,
+                "y": 1.5057141200292121,
+                "orientation": 90
+            }
+        ],
+        "exact_layout": null
+    }
+]
