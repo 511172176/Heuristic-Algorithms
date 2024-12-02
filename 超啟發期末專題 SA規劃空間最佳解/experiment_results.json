@@ -3,9 +3,9 @@
         "test_case": 1,
         "room_size": "3x3m",
         "sa_energy": 0,
-        "sa_time": 3.990492799988715,
+        "sa_time": 4.021834700019099,
         "exact_energy": 0,
-        "exact_time": 0.004962900013197213,
+        "exact_time": 0.004962999955751002,
         "sa_layout": [
             {
                 "name": "床",
@@ -63,9 +63,9 @@
         "test_case": 2,
         "room_size": "5x4m",
         "sa_energy": 0,
-        "sa_time": 8.638636900024721,
+        "sa_time": 8.668612100067548,
         "exact_energy": Infinity,
-        "exact_time": 3.0646785000280943,
+        "exact_time": 3.5944236000068486,
         "sa_layout": [
             {
                 "name": "床",
@@ -130,9 +130,9 @@
         "test_case": 3,
         "room_size": "2.5x2m",
         "sa_energy": 0,
-        "sa_time": 3.8549053999886382,
+        "sa_time": 4.136662799981423,
         "exact_energy": 0,
-        "exact_time": 0.0032039999787230045,
+        "exact_time": 0.002889399998821318,
         "sa_layout": [
             {
                 "name": "床",
@@ -190,7 +190,7 @@
         "test_case": 4,
         "room_size": "6x5m",
         "sa_energy": 0.39097829024182396,
-        "sa_time": 16.75533230000292,
+        "sa_time": 16.046434700023383,
         "exact_energy": null,
         "exact_time": null,
         "sa_layout": [

@@ -3,6 +3,8 @@ import copy
 import math
 import matplotlib.pyplot as plt
 
+from plot_utils import plot_layout
+
 # 優化器類別（模擬退火）
 class RoomLayoutOptimizer:
     def __init__(self, room_length, room_width, furniture_list):
@@ -16,6 +18,7 @@ class RoomLayoutOptimizer:
         best_energy_overall = float('inf')
 
         for run in range(runs):
+            print(f"    SA Run {run+1}/{runs}")
             # 初始化
             initial_state = self.generate_random_layout()
             current_state = copy.deepcopy(initial_state)
@@ -23,11 +26,11 @@ class RoomLayoutOptimizer:
             best_state = copy.deepcopy(current_state)
             best_energy = current_energy
 
-            T = 5000  # 提高初始溫度
+            T = 5000  # 初始溫度
             T_min = 1  # 最小溫度
-            alpha = 0.85  # 降溫速率（降低以保持更長的高溫階段）
+            alpha = 0.85  # 降溫速率
             iteration = 0
-            max_iterations = 50000  # 增加最大迭代次數
+            max_iterations = 50000  # 最大迭代次數
 
             while T > T_min and iteration < max_iterations:
                 for _ in range(100):
@@ -49,7 +52,7 @@ class RoomLayoutOptimizer:
                 iteration += 1
                 # 打印當前能量以監控優化過程
                 if iteration % 1000 == 0:
-                    print(f"  Run {run+1}, Iteration {iteration}, Temperature {T:.2f}, Best Energy {best_energy:.2f}")
+                    print(f"      Iteration {iteration}, Temperature {T:.2f}, Best Energy {best_energy:.2f}")
 
             # 更新全域最佳佈局
             if best_energy < best_energy_overall:
@@ -126,39 +129,5 @@ class RoomLayoutOptimizer:
         return x_overlap * y_overlap
 
     def display_layout(self, layout, title, save_path=None):
-        # 繪製佈局
-        fig, ax = plt.subplots(figsize=(6, 6))
-        scale_x = self.room_length
-        scale_y = self.room_width
-
-        # 繪製房間
-        ax.add_patch(plt.Rectangle((0, 0), self.room_length, self.room_width, fill=False, edgecolor='black', linewidth=2))
-
-        # 繪製家具
-        colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta']
-        for idx, item in enumerate(layout):
-            x = item['x']
-            y = item['y']
-            length = item['length']
-            width = item['width']
-            color = colors[idx % len(colors)]
-            rect = plt.Rectangle((x, y), length, width, facecolor=color, edgecolor='black', alpha=0.7)
-            ax.add_patch(rect)
-            # 添加家具名稱
-            ax.text(x + length/2, y + width/2, item['name'], ha='center', va='center', color='white', fontsize=8, clip_on=True)
-
-        ax.set_xlim(0, self.room_length)
-        ax.set_ylim(0, self.room_width)
-        ax.margins(0.05)  # 添加一些邊距以防止文字被裁剪
-        ax.set_aspect('equal')
-        ax.set_title(title)
-        ax.set_xlabel('Length (m)')
-        ax.set_ylabel('Width (m)')
-
-        plt.tight_layout()
-
-        if save_path:
-            plt.savefig(save_path)
-            print(f"  Layout image saved to {save_path}")
-
+        fig, ax = plot_layout(layout, self.room_length, self.room_width, title, save_path)
         plt.close(fig)  # 關閉圖表以防止重複顯示
