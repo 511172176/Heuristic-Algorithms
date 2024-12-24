@@ -1,7 +1,4 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{xeCJK}
-\usepackage{zhnumber}
-\usepackage{indentfirst}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{algorithm}
@@ -13,12 +10,7 @@
 \usepackage{listings}
 \usepackage{url}
 \usepackage{subfigure}
-\usepackage{placeins} % 引入 placeins 套件以使用 \FloatBarrier
-
-% 保持原有字型設定
-\setCJKmainfont{SimSun}
-\setCJKsansfont{SimHei}
-\setCJKmonofont{SimSun}
+\usepackage{placeins} % To use \FloatBarrier
 
 \lstset{
     basicstyle=\footnotesize\ttfamily,
@@ -34,31 +26,31 @@
 
 \begin{document}
 
-\title{房間佈置優化：模擬退火與精確解法的比較研究}
+\title{Room Layout Optimization: A Comparative Study of Simulated Annealing and Exact Methods}
 
 \author{
-    \IEEEauthorblockN{李則霖}
-    \IEEEauthorblockA{軟創三乙 511172176\\
-    資訊工程學系\\
-    輔仁大學}
+    \IEEEauthorblockN{Zelin Li}
+    \IEEEauthorblockA{Software Innovation Class 3B 511172176\\
+    Department of Computer Science and Information Engineering\\
+    Fu Jen Catholic University}
 }
 
 \maketitle
 
 \begin{abstract}
-在有限室內空間中，自動化優化房間佈置能協助設計師快速找到高品質佈局方案。本研究比較模擬退火（Simulated Annealing, SA）與精確解法（Exact Solver）兩種方法在房間佈置優化問題中的表現。我們選取四種不同規模的房間案例（3×3m、5×4m、2.5×2m、6×5m）進行實驗，分析其運行時間與能量（品質）表現。結果顯示：精確解法在小規模問題中能快速求得最優解，SA亦可達同品質解但耗時較長；在中大型問題中，精確解法無法求解（N/A），SA則雖耗時但可取得可行解。此外，我們提供整合的能量與時間比較圖，以更清楚呈現兩方法的優缺點。
+In limited indoor spaces, automated room layout optimization can assist designers in quickly finding high-quality layout solutions. This study compares the performance of Simulated Annealing (SA) and Exact Solver methods in the room layout optimization problem. We selected four different scale room cases (3×3m, 5×4m, 2.5×2m, 6×5m) for experiments, analyzing their runtime and energy (quality) performance. The results show that: Exact Solver can quickly obtain the optimal solution in small-scale problems, and SA can also achieve solutions of the same quality but takes longer; in medium to large-scale problems, Exact Solver fails to find a solution (N/A), while SA, although time-consuming, can obtain feasible solutions. Additionally, we provide integrated energy and time comparison graphs to clearly present the advantages and disadvantages of both methods.
 
-\textbf{關鍵詞}---模擬退火、精確解法、房間佈置、空間優化、自動化設計
+\textbf{Keywords}---Simulated Annealing, Exact Solver, Room Layout, Space Optimization, Automated Design
 \end{abstract}
 
-\section{引言}
-在室內設計中，家具的合理佈置攸關空間利用率與舒適度。傳統設計仰賴經驗，難以確保全域最優性。透過將問題轉化為組合優化並套用先進演算法，我們可在可控制時間內找到高品質解。
+\section{Introduction}
+In interior design, the rational arrangement of furniture is crucial for space utilization and comfort. Traditional design relies on experience, making it difficult to ensure global optimality. By transforming the problem into a combinatorial optimization and applying advanced algorithms, we can find high-quality solutions within controllable time frames.
 
-本研究比較模擬退火（SA）與精確解法（Exact Solver）於房間佈置優化問題之適用性。SA可在大規模問題中尋得近似解\cite{b1}，精確解法在小問題可保證最優解但不適用於中大型問題\cite{b2}。
+This study compares the applicability of Simulated Annealing (SA) and Exact Solver in room layout optimization problems. SA can find approximate solutions in large-scale problems \cite{b1}, while Exact Solver can guarantee optimal solutions for small problems but is unsuitable for medium to large-scale problems \cite{b2}.
 
-\section{研究背景與方法}
-\subsection{問題定義與能量機制}
-給定房間 \( R(w,h) \) 與家具集合 \( F \)。每家具具有固定尺寸與可擺放位置、旋轉方向（0°或90°）。為衡量佈局品質，定義能量函數：
+\section{Research Background and Methods}
+\subsection{Problem Definition and Energy Mechanism}
+Given a room \( R(w,h) \) and a set of furniture \( F \). Each furniture has fixed dimensions, possible placement positions, and rotation directions (0° or 90°). To measure the layout quality, the energy function is defined as:
 
 \begin{align}
 \min E &= \sum_{i=1}^{n}\sum_{j=i+1}^{n} O_{ij} + \sum_{i=1}^{n} B_i, \label{eq:energy} \\
@@ -67,13 +59,13 @@ O_{ij} &= \max\left(0, \min(x_i + w_i, x_j + w_j) - \max(x_i, x_j)\right) \nonum
 B_i &= \max\left(0, x_i + w_i - R_w\right) + \max\left(0, y_i + h_i - R_h\right). \label{eq:boundary}
 \end{align}
 
-其中：
+Where:
 \begin{itemize}
-    \item \( O_{ij} \) 為家具 \( i \) 與家具 \( j \) 之間的重疊面積。當 \( O_{ij} > 0 \) 時，表示兩家具重疊。
-    \item \( B_i \) 為家具 \( i \) 的越界懲罰，確保家具不超出房間範圍。能量越低，佈局品質越佳。
+    \item \( O_{ij} \) is the overlapping area between furniture \( i \) and furniture \( j \). When \( O_{ij} > 0 \), it indicates that the two furniture pieces overlap.
+    \item \( B_i \) is the boundary penalty for furniture \( i \), ensuring that the furniture does not exceed the room boundaries. The lower the energy, the better the layout quality.
 \end{itemize}
 
-\subsection{模擬退火 (SA) 虛擬碼}
+\subsection{Simulated Annealing (SA) Pseudocode}
 {\small
 \begin{algorithm}[!htbp]
 \caption{Simulated Annealing (SA) Pseudocode}
@@ -95,12 +87,12 @@ B_i &= \max\left(0, x_i + w_i - R_w\right) + \max\left(0, y_i + h_i - R_h\right)
 \end{algorithm}
 }
 
-SA 以高溫階段允許較差解被接受以逃離局部極值，隨降溫逐漸收斂至優解。
+SA allows worse solutions to be accepted in high-temperature stages to escape local optima and gradually converges to the optimal solution as the temperature decreases.
 
-\subsection{模擬退火（SA）數學描述}
-模擬退火是一種啟發式搜尋算法，用於在大規模搜索空間中找到近似全域最優解。
+\subsection{Mathematical Description of Simulated Annealing (SA)}
+Simulated Annealing is a heuristic search algorithm used to find approximate global optimal solutions in large-scale search spaces.
 
-**接受新狀態的概率**：
+\textbf{Probability of Accepting a New State}:
 \[
 P = 
 \begin{cases} 
@@ -108,23 +100,23 @@ P =
 e^{-\frac{\Delta E}{T}} & \Delta E > 0.
 \end{cases}
 \]
-其中：
+Where:
 \begin{itemize}
-    \item \( \Delta E = E_{\text{new}} - E_{\text{current}} \) 是新佈局的能量變化。
-    \item \( T \) 是當前溫度，隨迭代逐漸降低。
+    \item \( \Delta E = E_{\text{new}} - E_{\text{current}} \) is the energy change of the new layout.
+    \item \( T \) is the current temperature, gradually decreasing with iterations.
 \end{itemize}
 
-**降溫公式**：
+\textbf{Cooling Schedule}:
 \[
 T_{\text{new}} = \alpha \cdot T_{\text{current}}
 \]
-其中：
+Where:
 \begin{itemize}
-    \item \( \alpha \) 是降溫速率，程式中設置為 \( 0.85 \)。
-    \item \( T_{\text{initial}} \) 是初始溫度，程式中設置為 \( 5000 \)。
+    \item \( \alpha \) is the cooling rate, set to \( 0.85 \) in the program.
+    \item \( T_{\text{initial}} \) is the initial temperature, set to \( 5000 \) in the program.
 \end{itemize}
 
-\subsection{精確解法 (Exact Solver) 虛擬碼}
+\subsection{Exact Solver Pseudocode (Branch and Bound)}
 \begin{algorithm}[!htbp]
 \caption{Exact Solver (Branch and Bound) Pseudocode}
 \begin{algorithmic}[1]
@@ -151,147 +143,151 @@ T_{\text{new}} = \alpha \cdot T_{\text{current}}
 \end{algorithmic}
 \end{algorithm}
 
-精確解法能對小問題快速找到最優解，但在中大型問題中計算爆炸性增長，以致無解（N/A），其完整虛擬碼放置於文後頁。
+Exact Solver can quickly find the optimal solution for small problems, but in medium to large-scale problems, the computational complexity grows exponentially, making it unsolvable (N/A). The complete pseudocode is placed at the end of the document.
 
-\subsection{精確解法（Exact Solver）數學描述}
-暴力搜尋是一種枚舉所有可能佈局的算法，用於尋找全域最優解。
+\subsection{Mathematical Description of Exact Solver}
+Brute-force search is an algorithm that enumerates all possible layouts to find the global optimal solution.
 
 \[
 S = \prod_{i=1}^{N} P_i
 \]
 
-其中：
+Where:
 \begin{itemize}
-    \item \( N \) 是家具的總數。
-    \item \( P_i \) 是家具 \( i \) 的所有可能位置和旋轉的排列組合數。
+    \item \( N \) is the total number of furniture.
+    \item \( P_i \) is the number of possible placement and rotation combinations for furniture \( i \).
 \end{itemize}
 
-描述：
+Description:
 \begin{itemize}
-    \item 每個家具的排列數由步進長度（如 \( 0.25 \) m）和房間尺寸確定。
-    \item 通過遍歷 \( S \) 找到能量最小的佈局，當 \( E = 0 \) 時，即為最優解。
+    \item The number of permutations for each furniture is determined by the step length (e.g., \( 0.25 \) m) and room size.
+    \item By traversing \( S \), the layout with the minimum energy is found. When \( E = 0 \), it is the optimal solution.
 \end{itemize}
 
-\FloatBarrier % 確保所有浮動物件在此之前被放置
+\FloatBarrier % Ensure all floating objects are placed before this point
 
-\section{實驗設計}
-本研究測試四案例：
+\section{Experimental Design}
+This study tests four cases:
 \begin{itemize}
-    \item \textbf{CASE1：} 3×3m（小規模）
-    \item \textbf{CASE2：} 5×4m（中規模）
-    \item \textbf{CASE3：} 2.5×2m（小規模）
-    \item \textbf{CASE4：} 6×5m（大規模）
+    \item \textbf{CASE1:} 3×3m (small-scale)
+    \item \textbf{CASE2:} 5×4m (medium-scale)
+    \item \textbf{CASE3:} 2.5×2m (small-scale)
+    \item \textbf{CASE4:} 6×5m (large-scale)
 \end{itemize}
 
-比較 SA 與精確解法之最終能量與時間。
+Comparing the final energy and runtime of SA and Exact Solver.
 
-\section{結果與分析}
-以下依案例展示最優解佈局圖（精確解法與 SA 各一張，部分案例僅有 SA 圖），再呈現整體能量與時間比較，最後以表格彙整。
+\section{Results and Analysis}
+The optimal layout diagrams for each case are presented (one for Exact Solver and one for SA, some cases only have SA diagrams), followed by integrated energy and time comparison graphs, and finally summarized in a table.
 
 \subsection{CASE1 (3×3m)}
-小規模，精確解法可瞬間達能量 0，SA 亦能達 0 但較久。
+Small-scale. Exact Solver can instantly achieve energy 0, and SA can also achieve 0 but takes longer.
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{exact_layout_test_case_1.png} 
-    \caption{CASE1 精確解法最優佈局示意圖}
-    \label{fig:case1_exact_solver} % 添加標籤以便在正文中引用
+    \includegraphics[width=0.8\columnwidth]{exact_layout_test_case_1.png} 
+    \caption{CASE1 Optimal Layout using Exact Solver}
+    \label{fig:case1_exact_solver}
 \end{figure}
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{sa_layout_test_case_1.png} 
-    \caption{CASE1 SA最優佈局示意圖}
-    \label{fig:case1_exact_solver} % 添加標籤以便在正文中引用
+    \includegraphics[width=0.8\columnwidth]{sa_layout_test_case_1.png} 
+    \caption{CASE1 Optimal Layout using SA}
+    \label{fig:case1_sa}
 \end{figure}
 
-\FloatBarrier % 確保 CASE1 的圖片被放置
+\FloatBarrier % Ensure CASE1 images are placed
 
 \subsection{CASE2 (5×4m)}
-中規模，精確解法無解（inf），SA 約 8.7276 秒取得能量 0 解。
+Medium-scale. Exact Solver fails to find a solution (inf), while SA obtains an energy 0 solution in approximately 8.7276 seconds.
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{sa_layout_test_case_2.png} 
-    \caption{CASE2 SA最優佈局示意圖}
-    \label{fig:case1_exact_solver} % 添加標籤以便在正文中引用
+    \includegraphics[width=0.8\columnwidth]{sa_layout_test_case_2.png} 
+    \caption{CASE2 Optimal Layout using SA}
+    \label{fig:case2_sa}
 \end{figure}
 
-\FloatBarrier % 確保 CASE2 的圖片被放置
+\FloatBarrier % Ensure CASE2 images are placed
 
 \subsection{CASE3 (2.5×2m)}
-小規模類似 CASE1，精確解法快速 0 能量，SA 亦可但耗時較長。
+Small-scale similar to CASE1. Exact Solver quickly achieves energy 0, and SA can as well but takes longer.
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{exact_layout_test_case_3.png} 
-    \caption{CASE3 精確解法最優佈局示意圖}
-    \label{fig:case1_exact_solver} % 添加標籤以便在正文中引用
+    \includegraphics[width=0.8\columnwidth]{exact_layout_test_case_3.png} 
+    \caption{CASE3 Optimal Layout using Exact Solver}
+    \label{fig:case3_exact_solver}
 \end{figure}
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{sa_layout_test_case_3.png} 
-    \caption{CASE3 SA最優佈局示意圖}
-    \label{fig:case1_exact_solver} % 添加標籤以便在正文中引用
+    \includegraphics[width=0.8\columnwidth]{sa_layout_test_case_3.png} 
+    \caption{CASE3 Optimal Layout using SA}
+    \label{fig:case3_sa}
 \end{figure}
 
-\FloatBarrier % 確保 CASE3 的圖片被放置
+\FloatBarrier % Ensure CASE3 images are placed
 
 \subsection{CASE4 (6×5m)}
-大規模，精確解法無法求解（N/A），SA 約 16.3204 秒取得能量 0.39解。
+Large-scale. Exact Solver cannot find a solution (N/A), while SA obtains an energy 0.39 solution in approximately 16.3204 seconds.
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{sa_layout_test_case_4.png} 
-    \caption{CASE4 SA最優佈局示意圖}
-    \label{fig:case1_exact_solver} % 添加標籤以便在正文中引用
+    \includegraphics[width=0.8\columnwidth]{sa_layout_test_case_4.png} 
+    \caption{CASE4 Optimal Layout using SA}
+    \label{fig:case4_sa}
 \end{figure}
 
-\FloatBarrier % 確保 CASE4 的圖片被放置
+\FloatBarrier % Ensure CASE4 images are placed
 
-\subsection{整體能量比較}
-以下為 SA 與精確解法的能量比較圖：
+\subsection{Overall Energy Comparison}
+The following is the energy comparison graph between SA and Exact Solver:
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\columnwidth]{energy_comparison.png} 
-    \caption{整體能量比較：小規模精確解法、SA 皆 0；中大型精確解法 N/A，SA 有可行解}
+    \includegraphics[width=0.8\columnwidth]{energy_comparison.png} 
+    \caption{Overall Energy Comparison: Small-scale Exact Solver and SA both achieve 0; Medium to large-scale Exact Solver N/A, SA has feasible solutions}
+    \label{fig:energy_comparison}
 \end{figure}
 
-\FloatBarrier % 確保整體能量比較圖被放置
+\FloatBarrier % Ensure energy comparison graph is placed
 
-\subsection{整體時間比較}
-以下為 SA 與精確解法的時間比較圖：
+\subsection{Overall Time Comparison}
+The following is the time comparison graph between SA and Exact Solver:
 
 \begin{figure}[!htbp]
     \centering
-   \includegraphics[width=\columnwidth]{time_comparison.png} 
-    \caption{整體時間比較：小問題精確解法極快，SA 較久；中大型精確解法 N/A，SA 較久但有解}
+    \includegraphics[width=0.8\columnwidth]{time_comparison.png} 
+    \caption{Overall Time Comparison: Exact Solver is extremely fast for small problems, SA takes longer; Exact Solver is N/A for medium to large-scale problems, SA takes longer but has solutions}
+    \label{fig:time_comparison}
 \end{figure}
 
-\FloatBarrier % 確保整體時間比較圖被放置
+\FloatBarrier % Ensure time comparison graph is placed
 
-\subsection{結果表格彙整}
-表 I 彙整四案例結果。
+\subsection{Summary of Results in Table}
+Table I summarizes the results of the four cases.
 
 \begin{table}[!htbp]
-\caption{四案例結果摘要}
-\includegraphics[width=\columnwidth]{results_comparison_table.png} 
+\centering
+\caption{Summary of Results for Four Cases}
+\includegraphics[width=0.8\columnwidth]{results_comparison_table.png} 
+\label{tab:results_summary}
 \end{table}
 
-\FloatBarrier % 確保表格被放置
+\FloatBarrier % Ensure table is placed
 
-\section{結論與展望}
-本研究比較 SA 與精確解法在房間佈置優化問題下的表現。結果顯示：
+\section{Conclusion and Future Work}
+This study compares the performance of SA and Exact Solver in room layout optimization problems. The results show:
 \begin{itemize}
-    \item 小規模問題：精確解法能在極短時間內求得能量 0 最優解，SA 亦可達 0 但較耗時。
-    \item 中大型問題：精確解法無法求解（N/A），SA 雖耗時但仍可取得可行解。
+    \item Small-scale problems: Exact Solver can quickly obtain the optimal solution with energy 0, and SA can also achieve 0 but takes longer.
+    \item Medium to large-scale problems: Exact Solver fails to solve (N/A), while SA, although time-consuming, can obtain feasible solutions.
 \end{itemize}
 
-未來可考慮混合策略（如先由精確解法求解局部，再以 SA 全域優化）或增加實務約束，使結果更貼近真實設計需求。
+Future work may consider hybrid strategies (such as using Exact Solver for local solutions first, then using SA for global optimization) or adding practical constraints to make the results more aligned with real design requirements.
 
-\FloatBarrier % 確保所有浮動物件在此之前被放置
+\FloatBarrier % Ensure all floating objects are placed before this point
 
 \begin{thebibliography}{99}
 \bibitem{b1} Kirkpatrick, S., Gelatt, C. D., \& Vecchi, M. P. (1983). Optimization by simulated annealing. \textit{Science}, 220(4598), 671–680. \url{https://doi.org/10.1126/science.220.4598.671}
